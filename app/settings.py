@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Created apps
     'api',
+    'artifica',
     
     # External Libraries
     'rest_framework',
