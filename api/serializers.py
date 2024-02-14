@@ -1,13 +1,12 @@
 from rest_framework import serializers
 from .models.app import Workspace, Node, Edge
-from .models import CustomUser
-
 
 
 class EdgeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Edge
         fields = '__all__'
+
 
 class NodeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,7 +23,7 @@ class WorkspaceSerializer(serializers.ModelSerializer):
 class WorkspaceDetailedSerializer(serializers.ModelSerializer):
     nodes = NodeSerializer(many=True, read_only=True, source='workspace_nodes')
     edges = EdgeSerializer(many=True, read_only=True, source='workspace_edges')
-    
+
     class Meta:
         model = Workspace
         fields = (
@@ -36,4 +35,3 @@ class WorkspaceDetailedSerializer(serializers.ModelSerializer):
             "edges",
             # "blocks"
         )
-        

@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
 import uuid
 from django_editorjs import EditorJsField
 
 
 from app.settings import AUTH_USER_MODEL
+
 
 class TagChoices(models.TextChoices):
     H1 = 'h1', 'Heading 1'
@@ -15,7 +15,8 @@ class TagChoices(models.TextChoices):
     H6 = 'h6', 'Heading 6'
     P = 'p', 'Paragraph'
     IMG = 'img', 'Image'
-    
+
+
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,29 +26,34 @@ class BaseModel(models.Model):
         abstract = True
 
 
-
 class Workspace(BaseModel):
     title = models.CharField(max_length=255, null=True, default=None)
     creator = models.ForeignKey(
         AUTH_USER_MODEL, on_delete=models.CASCADE, default=None, null=True
     )
-    
-    
+
 
 class Node(BaseModel):
-    title = models.CharField(max_length=255, null=True, default=None, blank=True)
+    title = models.CharField(max_length=255,
+                             null=True,
+                             default=None,
+                             blank=True
+                             )
     x = models.IntegerField()
     y = models.IntegerField()
-    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name="workspace_nodes")
+    workspace = models.ForeignKey(Workspace,
+                                  on_delete=models.CASCADE,
+                                  related_name="workspace_nodes"
+                                  )
     is_expanded = models.BooleanField(default=True)
-    body=EditorJsField(
+    body = EditorJsField(
         editorjs_config={
-            "tools":{
-                "Image":{
-                    "config":{
-                        "endpoints":{
-                            "byFile":'/uploadi/'
-                        },                       
+            "tools": {
+                "Image": {
+                    "config": {
+                        "endpoints": {
+                            "byFile": '/uploadi/'
+                        },
                     }
                 },
             }
@@ -57,11 +63,20 @@ class Node(BaseModel):
         default=None
     )
 
+
 class Edge(BaseModel):
-    source = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='source')
-    target = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='target')
-    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name="workspace_edges")
-
-
-
-    
+    source = models.ForeignKey(
+        Node,
+        on_delete=models.CASCADE,
+        related_name='source'
+    )
+    target = models.ForeignKey(
+        Node,
+        on_delete=models.CASCADE,
+        related_name='target'
+    )
+    workspace = models.ForeignKey(
+        Workspace,
+        on_delete=models.CASCADE,
+        related_name="workspace_edges"
+    )
